@@ -1,0 +1,385 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+header p {
+    color: #666;
+    font-size: 14px;
+}
+
+.accounts-section h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.accounts-list {
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.account-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.account-code {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #667eea;
+    letter-spacing: 2px;
+}
+
+.account-timer {
+    font-size: 12px;
+    color: #666;
+}
+
+.add-btn {
+    width: 100%;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-btn:hover {
+    background: #218838;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: #333;
+}
+
+.tab-btn.active {
+    border-bottom-color: #667eea;
+    color: #667eea;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #5a6fd8;
+    color: #f8f9fa;
+}
+
+.remove-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn:hover {
+    background: #c82333;
+}
+
+.account-info {
+    flex-grow: 1;
+}
+
+.account-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Стили для отладки */
+.debug-info {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Улучшенные стили для аккаунтов */
+.account-info {
+    flex: 1;
+}
+
+.account-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.remove-btn:hover {
+    background: #c82333;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Стили для таймера с прогресс-баром */
+.timer-progress {
+    width: 50px;
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.timer-fill {
+    height: 100%;
+    background: #667eea;
+    transition: width 1s linear;
+}
+
+.account-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    color: #666;
+    min-width: 60px;
+}
+
+/* Стили для отображения секретного ключа */
+.account-secret {
+    font-size: 10px;
+    color: #999;
+    font-family: 'Courier New', monospace;
+    margin-top: 5px;
+}
+
+/* Стили для кода */
+.account-code {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: bold;
+    color: #667eea;
+    letter-spacing: 3px;
+    margin: 5px 0;
+}
+
+/* Анимация при обновлении кода */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.account-card.updating .account-code {
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Стили для модальных окон паролей */
+#password-modal, #login-modal {
+    display: none;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.password-strength {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.strength-weak { color: #dc3545; }
+.strength-medium { color: #ffc107; }
+.strength-strong { color: #28a745; }
+
+/* Стили для зашифрованного состояния */
+.encrypted-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    color: #856404;
+}

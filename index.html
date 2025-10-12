@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2FA Аутентификатор</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 2FA Аутентификатор</h1>
+            <p>Ваш безопасный генератор кодов</p>
+        </header>
+
+        <!-- Список аккаунтов -->
+        <div class="accounts-section">
+            <h2>Мои аккаунты</h2>
+            <div id="accounts-list" class="accounts-list">
+                <!-- Аккаунты будут здесь -->
+                <div class="empty-state" id="empty-state">
+                    <p>У вас пока нет добавленных аккаунтов</p>
+                    <button onclick="showAddAccountModal()">Добавить первый аккаунт</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка добавления -->
+        <div class="actions">
+            <button class="add-btn" onclick="showAddAccountModal()">
+                + Добавить аккаунт
+            </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно добавления аккаунта -->
+    <div id="add-account-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Добавить аккаунт</h2>
+                <button class="close-btn" onclick="hideAddAccountModal()">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <!--Ручной ввод -->
+                <div class="tab-content active" id="manual-tab">
+                    <h3>Ввести вручную</h3>
+                    <div class="input-group">
+                        <label>Название сервиса:</label>
+                        <input type="text" id="issuer-input" placeholder="Например: Google, GitHub">
+                    </div>
+                    <div class="input-group">
+                        <label>Секретный ключ:</label>
+                        <input type="text" id="secret-input" placeholder="JBSWY3DPEHPK3PXP">
+                    </div>
+                    <button onclick="addManualAccount()">Добавить аккаунт</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно мастер-пароля -->
+<div id="password-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔐 Введите мастер-пароль</h2>
+        </div>
+        <div class="modal-body">
+            <p>Этот пароль будет использоваться для шифрования ваших секретных ключей.</p>
+            <div class="input-group">
+                <label>Мастер-пароль:</label>
+                <input type="password" id="master-password" placeholder="Введите надежный пароль">
+            </div>
+            <div class="input-group">
+                <label>Подтвердите пароль:</label>
+                <input type="password" id="confirm-password" placeholder="Повторите пароль">
+            </div>
+            <div class="modal-actions">
+                <button onclick="setupMasterPassword()">Сохранить пароль</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно ввода пароля -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔐 Введите мастер-пароль</h2>
+        </div>
+        <div class="modal-body">
+            <div class="input-group">
+                <label>Мастер-пароль:</label>
+                <input type="password" id="login-password" placeholder="Введите ваш мастер-пароль">
+            </div>
+            <div class="modal-actions">
+                <button onclick="login()">Войти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Подключаем библиотеки -->
+    <script src="https://cdn.jsdelivr.net/npm/@otplib/preset-browser@12.0.1/buffer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@otplib/preset-browser@12.0.1/index.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
