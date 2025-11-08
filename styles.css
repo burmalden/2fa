@@ -214,7 +214,7 @@ button:hover {
     color: white;
     border: none;
     width: 30px;
-    height: 30px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 16px;
@@ -355,6 +355,13 @@ button:hover {
 /* Стили для модальных окон паролей */
 #password-modal, #login-modal {
     display: none;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .modal-actions {

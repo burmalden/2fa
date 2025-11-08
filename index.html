@@ -15,12 +15,12 @@
 
         <!-- Список аккаунтов -->
         <div class="accounts-section">
-            <h2>Мои аккаунты</h2>
+            <h2>Мои ключи</h2>
             <div id="accounts-list" class="accounts-list">
                 <!-- Аккаунты будут здесь -->
                 <div class="empty-state" id="empty-state">
-                    <p>У вас пока нет добавленных аккаунтов</p>
-                    <button onclick="showAddAccountModal()">Добавить первый аккаунт</button>
+                    <p>У вас пока нет добавленных ключей</p>
+                    <button onclick="showAddAccountModal()">Добавить первый ключ</button>
                 </div>
             </div>
         </div>
@@ -28,7 +28,10 @@
         <!-- Кнопка добавления -->
         <div class="actions">
             <button class="add-btn" onclick="showAddAccountModal()">
-                + Добавить аккаунт
+                + Добавить ключ
+            </button>
+            <button onclick="window.location.reload()">
+                х Выйти
             </button>
         </div>
     </div>
@@ -37,7 +40,7 @@
     <div id="add-account-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Добавить аккаунт</h2>
+                <h2>Добавить ключ</h2>
                 <button class="close-btn" onclick="hideAddAccountModal()">×</button>
             </div>
             
@@ -53,7 +56,7 @@
                         <label>Секретный ключ:</label>
                         <input type="text" id="secret-input" placeholder="JBSWY3DPEHPK3PXP">
                     </div>
-                    <button onclick="addManualAccount()">Добавить аккаунт</button>
+                    <button onclick="addManualAccount()">Добавить ключ</button>
                 </div>
             </div>
         </div>
