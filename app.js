@@ -272,7 +272,7 @@ function hideAddAccountModal() {
 }
 
 // Добавление аккаунта вручную
-function addManualAccount() {
+async function addManualAccount() {
     const issuer = document.getElementById('issuer-input').value;
     const secret = document.getElementById('secret-input').value.trim();
     
@@ -296,7 +296,7 @@ function addManualAccount() {
     };
     
     accounts.push(newAccount);
-    saveAccounts();
+    await saveAccounts();
     renderAccounts();
     hideAddAccountModal();
     
@@ -315,10 +315,10 @@ function isValidSecret(secret) {
 }
 
 // Удаление аккаунта
-function removeAccount(index) {
+async function removeAccount(index) {
     if (confirm('Удалить этот аккаунт?')) {
         accounts.splice(index, 1);
-        saveAccounts();
+        await saveAccounts();
         renderAccounts();
     }
 }
@@ -418,8 +418,134 @@ async function decryptData(encryptedData) {
 // Добавляем функции в глобальную область видимости
 window.showAddAccountModal = showAddAccountModal;
 window.hideAddAccountModal = hideAddAccountModal;
-window.showTab = showTab;
 window.addManualAccount = addManualAccount;
 window.removeAccount = removeAccount;
 
 console.log('Приложение инициализировано!');
+
+async function handleQRUpload(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    processQRImage(file);
+}
+
+function parseOTPAuthURL(url) {
+    try {
+        if (!url.startsWith('otpauth://')) {
+            throw new Error('Неверный формат OTP ссылки');
+        }
+
+        const parsedUrl = new URL(url);
+
+        const secret = parsedUrl.searchParams.get('secret');
+        const issuer = parsedUrl.searchParams.get('issuer');
+
+        if (!secret) {
+            throw new Error('Secret ключ не найден');
+        }
+
+        const accountName = issuer || 'Unknown Service';
+
+        const newAccount = {
+            issuer: accountName,
+            secret: secret,
+            addedAt: new Date().toISOString()
+        };
+
+        accounts.push(newAccount);
+
+        saveAccounts();
+        renderAccounts();
+
+        alert(`Ключ ${accountName} успешно импортирован!`);
+
+        hideAddAccountModal();
+
+        console.log('✅ OTP аккаунт импортирован');
+
+    } catch (error) {
+        console.error('Ошибка обработки OTP URL:', error);
+        alert('Ошибка обработки QR-кода');
+    }
+}
+
+document.addEventListener('paste', handlePaste);
+
+async function handlePaste(event) {
+
+    const items = event.clipboardData.items;
+
+    for (const item of items) {
+
+        if (item.type.startsWith('image/')) {
+
+            const file = item.getAsFile();
+
+            console.log('📋 Вставлено изображение из буфера');
+
+            processQRImage(file);
+
+            return;
+        }
+    }
+
+    console.log('❌ В буфере нет изображения');
+}
+
+async function processQRImage(file) {
+
+    try {
+
+        console.log('🔍 Анализ QR изображения...');
+
+        const image = new Image();
+
+        image.onload = function () {
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            context.drawImage(image, 0, 0);
+
+            const imageData = context.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            const code = jsQR(
+                imageData.data,
+                imageData.width,
+                imageData.height
+            );
+
+            if (code) {
+
+                console.log('✅ QR найден:', code.data);
+
+                parseOTPAuthURL(code.data);
+
+            } else {
+
+                alert('QR-код не найден');
+            }
+        };
+
+        image.src = URL.createObjectURL(file);
+
+    } catch (error) {
+
+        console.error('Ошибка обработки QR:', error);
+
+        alert('Ошибка чтения QR-кода');
+    }
+}
