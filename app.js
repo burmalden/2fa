@@ -147,8 +147,8 @@ function renderAccounts() {
     if (accounts.length === 0) {
         accountsList.innerHTML = `
             <div class="empty-state">
-                <p>${masterPassword ? 'У вас пока нет добавленных аккаунтов' : 'Требуется настройка безопасности'}</p>
-                <button onclick="showAddAccountModal()">Добавить первый аккаунт</button>
+                <p>${masterPassword ? 'У вас пока нет добавленных ключей' : 'Требуется настройка безопасности'}</p>
+                <button onclick="showAddAccountModal()">Добавить первый ключ</button>
             </div>
         `;
     } else {
@@ -304,7 +304,7 @@ async function addManualAccount() {
     document.getElementById('issuer-input').value = '';
     document.getElementById('secret-input').value = '';
     
-    alert('Аккаунт успешно добавлен!');
+    alert('Ключ успешно добавлен!');
 }
 
 // Простая проверка секретного ключа
