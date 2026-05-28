@@ -70,6 +70,22 @@
                     onchange="handleQRUpload(event)"
                 >
             </div>
+
+            <div class="camera-section">
+
+                <h3>Сканирование камерой</h3>
+
+                <video
+                    id="qr-video"
+                    autoplay
+                    playsinline
+                ></video>
+
+                <button onclick="startCameraScanner()">
+                    Сканировать QR
+                </button>
+
+            </div>
         </div>
     </div>
 

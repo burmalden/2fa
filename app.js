@@ -549,3 +549,79 @@ async function processQRImage(file) {
         alert('Ошибка чтения QR-кода');
     }
 }
+
+async function startCameraScanner() {
+
+    try {
+
+        const video = document.getElementById('qr-video');
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'environment'
+            }
+        });
+
+        video.srcObject = stream;
+
+        scanQRCodeFromVideo(video);
+
+        console.log('📷 Камера запущена');
+
+    } catch (error) {
+
+        console.error('Ошибка доступа к камере:', error);
+
+        alert('Не удалось получить доступ к камере');
+    }
+}
+
+function scanQRCodeFromVideo(video) {
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    const scanInterval = setInterval(() => {
+
+        if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+            return;
+        }
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        context.drawImage(video, 0, 0);
+
+        const imageData = context.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        const code = jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height
+        );
+
+        if (code) {
+
+            console.log('✅ QR найден:', code.data);
+
+            parseOTPAuthURL(code.data);
+
+            clearInterval(scanInterval);
+
+            // Останавливаем камеру
+            const stream = video.srcObject;
+
+            stream.getTracks().forEach(track => track.stop());
+
+            video.srcObject = null;
+
+            alert('QR-код успешно отсканирован!');
+        }
+
+    }, 300);
+}
