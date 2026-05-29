@@ -28,10 +28,10 @@
         <!-- Кнопка добавления -->
         <div class="actions">
             <button class="add-btn" onclick="showAddAccountModal()">
-                + Добавить ключ
+                Добавить ключ
             </button>
-            <button onclick="window.location.reload()">
-                х Выйти
+            <button onclick="logout()">
+                Выйти
             </button>
         </div>
     </div>
@@ -98,6 +98,14 @@
         <div class="modal-body">
             <p>Этот пароль будет использоваться для шифрования ваших секретных ключей.</p>
             <div class="input-group">
+                <label>Имя пользователя:</label>
+                <input
+                    type="text"
+                    id="register-username"
+                    placeholder="Введите имя пользователя"
+                >
+            </div>
+            <div class="input-group">
                 <label>Мастер-пароль:</label>
                 <input type="password" id="master-password" placeholder="Введите надежный пароль">
             </div>
@@ -106,7 +114,17 @@
                 <input type="password" id="confirm-password" placeholder="Повторите пароль">
             </div>
             <div class="modal-actions">
-                <button onclick="setupMasterPassword()">Сохранить пароль</button>
+                <div class="modal-actions">
+
+                    <button onclick="setupMasterPassword()">
+                        Создать аккаунт
+                    </button>
+
+                    <button onclick="switchToLogin()">
+                        Уже есть аккаунт
+                    </button>
+
+                </div>
             </div>
         </div>
     </div>
@@ -119,12 +137,31 @@
             <h2>🔐 Введите мастер-пароль</h2>
         </div>
         <div class="modal-body">
+
+            <div class="input-group">
+                <label>Имя пользователя:</label>
+                <input
+                    type="text"
+                    id="login-username"
+                    placeholder="Введите имя пользователя"
+                >
+            </div>
+
             <div class="input-group">
                 <label>Мастер-пароль:</label>
                 <input type="password" id="login-password" placeholder="Введите ваш мастер-пароль">
             </div>
             <div class="modal-actions">
-                <button onclick="login()">Войти</button>
+                <div class="modal-actions">
+
+                <button onclick="login()">
+                    Войти
+                </button>
+
+                <button onclick="switchToRegister()">
+                    Регистрация
+                </button>
+                </div>
             </div>
         </div>
     </div>

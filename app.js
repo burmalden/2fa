@@ -2,6 +2,27 @@
 let accounts = [];
 let masterPassword = null;
 let cryptoKey = null;
+let currentUser = null;
+const SESSION_DURATION = 15 * 60 * 1000;
+
+function getUserStorageKey(username) {
+    return `2fa-user-${username}`;
+}
+
+function getUsersList() {
+
+    const users = localStorage.getItem('2fa-users-list');
+
+    return users ? JSON.parse(users) : [];
+}
+
+function saveUsersList(users) {
+
+    localStorage.setItem(
+        '2fa-users-list',
+        JSON.stringify(users)
+    );
+}
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,14 +32,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Проверка наличия мастер-пароля
 async function checkMasterPassword() {
-    const hasMasterPassword = localStorage.getItem('2fa-has-master-password');
-    const encryptedData = localStorage.getItem('2fa-encrypted-accounts');
-    
-    if (!hasMasterPassword || !encryptedData) {
-        // Первый запуск - настраиваем мастер-пароль
+    const sessionData = localStorage.getItem('2fa-session');
+    if (sessionData) {
+        try {
+            const session = JSON.parse(sessionData);
+            const currentTime = Date.now();
+            const sessionAge = currentTime - session.loginTime;
+            if (sessionAge < SESSION_DURATION) {
+                console.log('✅ Активная сессия найдена');
+                showLoginModal();
+                document.getElementById('login-username').value =
+                    session.username;
+                return;
+            }
+            console.log('⌛ Сессия истекла');
+            localStorage.removeItem('2fa-session');
+        } catch (error) {
+            console.error('Ошибка session:', error);
+            localStorage.removeItem('2fa-session');
+        }
+    }
+    const users = getUsersList();
+    if (users.length === 0) {
         showPasswordSetupModal();
     } else {
-        // Показываем окно входа
         showLoginModal();
     }
 }
@@ -37,6 +74,15 @@ function showLoginModal() {
 async function setupMasterPassword() {
     const password = document.getElementById('master-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
+    const username = document
+        .getElementById('register-username')
+        .value
+        .trim();
+
+    if (!username) {
+        alert('Введите имя пользователя');
+    return;
+}
     
     if (!password) {
         alert('Введите мастер-пароль');
@@ -55,16 +101,45 @@ async function setupMasterPassword() {
     
     try {
         // Сохраняем хеш пароля (в реальном приложении нужно использовать более безопасные методы)
+        currentUser = username;
         masterPassword = password;
         
         // Генерируем ключ шифрования из пароля
         cryptoKey = await deriveKeyFromPassword(password);
-        
-        // Сохраняем флаг что мастер-пароль установлен
-        localStorage.setItem('2fa-has-master-password', 'true');
+
+        const users = getUsersList();
+
+        if (users.includes(username)) {
+
+            alert('Пользователь уже существует');
+
+            return;
+        }
+
+        users.push(username);
+
+        saveUsersList(users);
+
+        const verificationData = await encryptData({
+            check: 'AUTH_OK'
+        });
+
+        localStorage.setItem(
+            getUserCheckKey(username),
+            verificationData
+        );
         
         // Скрываем модальное окно
         document.getElementById('password-modal').style.display = 'none';
+        document.getElementById('login-modal').style.display = 'none';
+
+        localStorage.setItem(
+            '2fa-session',
+            JSON.stringify({
+                username: currentUser,
+                loginTime: Date.now()
+            })
+        );
         
         console.log('✅ Мастер-пароль установлен');
         loadAccounts();
@@ -78,23 +153,58 @@ async function setupMasterPassword() {
 
 // Вход с мастер-паролем
 async function login() {
+    const username = document
+        .getElementById('login-username')
+        .value
+        .trim();
     const password = document.getElementById('login-password').value;
     
     if (!password) {
         alert('Введите мастер-пароль');
         return;
     }
+
+    if (!username) {
+        alert('Введите имя пользователя');
+        return;
+    }
     
     try {
         // Пробуем расшифровать данные с этим паролем
+        currentUser = username;
         cryptoKey = await deriveKeyFromPassword(password);
+
         masterPassword = password;
-        
-        // Проверяем что пароль правильный пытаясь расшифровать данные
+
+        const checkData = localStorage.getItem(
+            getUserCheckKey(username)
+        );
+
+        if (!checkData) {
+
+            throw new Error('Пользователь не существует');
+        }
+
+        const decryptedCheck = await decryptData(checkData);
+
+        if (decryptedCheck.check !== 'AUTH_OK') {
+
+            throw new Error('Неверный пароль');
+        }
+
         await loadAccounts();
         
         // Если успешно - скрываем окно входа
         document.getElementById('login-modal').style.display = 'none';
+        document.getElementById('password-modal').style.display = 'none';
+
+        localStorage.setItem(
+            '2fa-session',
+            JSON.stringify({
+                username: currentUser,
+                loginTime: Date.now()
+            })
+        );
         
         console.log('✅ Успешный вход');
         startTimer();
@@ -108,7 +218,9 @@ async function login() {
 
 // Загрузка аккаунтов из localStorage
 async function loadAccounts() {
-    const encryptedData = localStorage.getItem('2fa-encrypted-accounts');
+    const encryptedData = localStorage.getItem(
+    getUserStorageKey(currentUser)
+    );
     
     if (!encryptedData) {
         accounts = [];
@@ -130,7 +242,10 @@ async function loadAccounts() {
 async function saveAccounts() {
     try {
         const encryptedData = await encryptData(accounts);
-        localStorage.setItem('2fa-encrypted-accounts', encryptedData);
+        localStorage.setItem(
+            getUserStorageKey(currentUser),
+            encryptedData
+        );
         console.log('✅ Аккаунты зашифрованы и сохранены');
     } catch (error) {
         console.error('Ошибка сохранения аккаунтов:', error);
@@ -625,3 +740,35 @@ function scanQRCodeFromVideo(video) {
 
     }, 300);
 }
+
+function switchToRegister() {
+
+    document.getElementById('login-modal').style.display = 'none';
+
+    document.getElementById('password-modal').style.display = 'block';
+}
+
+function switchToLogin() {
+
+    document.getElementById('password-modal').style.display = 'none';
+
+    document.getElementById('login-modal').style.display = 'block';
+}
+
+function logout() {
+    accounts = [];
+    masterPassword = null;
+    cryptoKey = null;
+    currentUser = null;
+    renderAccounts();
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-modal').style.display = 'block';
+    localStorage.removeItem('2fa-session');
+    console.log('🔒 Пользователь вышел из аккаунта');
+}
+
+function getUserCheckKey(username) {
+    return `2fa-check-${username}`;
+}
+
