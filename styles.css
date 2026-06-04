@@ -4,20 +4,62 @@
     box-sizing: border-box;
 }
 
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(10px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalShow {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(.95);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+    }
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #0f172a;
     min-height: 100vh;
     padding: 20px;
+    color: white;
 }
 
 .container {
-    max-width: 400px;
+    max-width: 700px;
     margin: 0 auto;
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+    background: #111827;
+
+    border: 1px solid #1f2937;
+
+    border-radius: 24px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.4);
 }
 
 header {
@@ -26,19 +68,24 @@ header {
 }
 
 header h1 {
-    color: #333;
-    margin-bottom: 5px;
+    color: white;
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
 header p {
-    color: #666;
-    font-size: 14px;
+    color: #94a3b8;
 }
 
 .accounts-section h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #333;
+
+    color: #f8fafc;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    margin-bottom: 20px;
 }
 
 .accounts-list {
@@ -62,81 +109,188 @@ header p {
 }
 
 .account-card {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 10px;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 20px;
+
+    min-height: 110px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    transition: .25s;
+
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 15px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.account-card:hover {
+
+    transform: translateY(-2px);
+
+    border-color: #667eea;
+}
+
+.account-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 4px;
+    height: 100%;
+
+    background: linear-gradient(
+        #667eea,
+        #8b5cf6
+    );
 }
 
 .account-name {
-    font-weight: bold;
-    color: #333;
+
+    color: #e2e8f0;
+
+    font-size: 18px;
+
+    font-weight: 600;
 }
 
 .account-code {
-    font-family: 'Courier New', monospace;
-    font-size: 18px;
-    font-weight: bold;
-    color: #667eea;
-    letter-spacing: 2px;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    color: white;
+
+    margin-top: 12px;
+
+    margin-bottom: 12px;
 }
 
-.account-timer {
-    font-size: 12px;
-    color: #666;
+.account-name {
+
+    font-size: 18px;
+
+    color: #cbd5e1;
+
+    margin-bottom: 8px;
+}
+
+.account-timer span {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #cbd5e1;
 }
 
 .add-btn {
-    width: 100%;
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #8b5cf6
+    );
+
     font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+
+    font-weight: 600;
+
+    border-radius: 14px;
+
+    padding: 16px;
+
+    transition: .25s;
 }
 
 .add-btn:hover {
-    background: #218838;
+
+    transform: translateY(-2px);
 }
 
 /* Модальное окно */
 .modal {
     display: none;
+
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.7);
+
     z-index: 1000;
+
+    justify-content: center;
+    align-items: center;
+
+    backdrop-filter: blur(8px);
 }
 
 .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 400px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
+
+    width: 100%;
+    max-width: 500px;
+
+    background: #111827;
+
+    border: 1px solid #334155;
+
+    border-radius: 24px;
+
+    padding: 32px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.5);
+
+    animation: modalShow .2s ease;
 }
 
 .modal-header {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
-    margin-bottom: 20px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #334155;
+}
+
+.modal-body {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.modal-body button {
+
+    margin-top: 10px;
 }
 
 .close-btn {
@@ -177,13 +331,21 @@ header p {
 }
 
 .input-group {
-    margin-bottom: 15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
 }
 
 .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
+
+    color: #cbd5e1;
+
+    font-size: 14px;
 }
 
 .input-group input {
@@ -202,39 +364,45 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
+    border-radius: 14px;
+    font-weight: 600;
 }
 
 button:hover {
     background: #5a6fd8;
     color: #f8f9fa;
+    transform: translateY(-2px);
 }
 
 .remove-btn {
-    background: #dc3545;
-    color: white;
-    border: none;
-    width: 30px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
+
+    background: transparent;
+
+    border: 1px solid #334155;
+
+    color: #94a3b8;
+
+    padding: 0px;
 }
 
 .remove-btn:hover {
-    background: #c82333;
-}
 
-.account-info {
-    flex-grow: 1;
+    background: rgba(239,68,68,.15);
+
+    color: #ef4444;
+
+    border-color: #ef4444;
 }
 
 .account-card {
     display: flex;
     align-items: center;
     gap: 10px;
+    animation: fadeIn .25s ease;
 }
 
 /* Стили для отладки */
@@ -250,36 +418,6 @@ button:hover {
 /* Улучшенные стили для аккаунтов */
 .account-info {
     flex: 1;
-}
-
-.account-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.remove-btn {
-    background: #dc3545;
-    color: white;
-    border: none;
-    width: 30px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.remove-btn:hover {
-    background: #c82333;
 }
 
 .empty-state {
@@ -300,18 +438,32 @@ button:hover {
 
 /* Стили для таймера с прогресс-баром */
 .timer-progress {
-    width: 50px;
-    height: 4px;
-    background: #e9ecef;
-    border-radius: 2px;
+
+    width: 80px;
+
+    height: 8px;
+
+    background: rgba(255,255,255,.08);
+
+    border-radius: 999px;
+
     overflow: hidden;
-    margin-bottom: 5px;
+
+    margin-bottom: 8px;
 }
 
 .timer-fill {
+
     height: 100%;
-    background: #667eea;
+
+    border-radius: 999px;
+
+    background: #818cf8;
+
     transition: width 1s linear;
+
+    box-shadow:
+        0 0 10px rgba(59,130,246,.5);
 }
 
 .account-timer {
@@ -321,14 +473,7 @@ button:hover {
     font-size: 12px;
     color: #666;
     min-width: 60px;
-}
-
-/* Стили для отображения секретного ключа */
-.account-secret {
-    font-size: 10px;
-    color: #999;
-    font-family: 'Courier New', monospace;
-    margin-top: 5px;
+    margin-right: 8px;
 }
 
 /* Стили для кода */
@@ -365,10 +510,14 @@ button:hover {
 }
 
 .modal-actions {
+
     display: flex;
-    gap: 10px;
+
     justify-content: flex-end;
-    margin-top: 20px;
+
+    gap: 12px;
+
+    margin-top: 10px;
 }
 
 .password-strength {
@@ -382,13 +531,21 @@ button:hover {
 
 /* Стили для зашифрованного состояния */
 .encrypted-warning {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    color: #94a3b8;
+
+    border-radius: 14px;
+
+    padding: 12px;
+
+    margin-bottom: 16px;
+
     text-align: center;
-    color: #856404;
+
+    font-size: 13px;
 }
 
 #qr-video {
@@ -396,4 +553,44 @@ button:hover {
     max-width: 300px;
     border-radius: 12px;
     margin-top: 10px;
+}
+
+.input-group input {
+
+    height: 48px;
+
+    padding: 0 16px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+}
+
+.upload-btn {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 48px;
+
+    border-radius: 12px;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    cursor: pointer;
+
+    color: white;
+
+    transition: .2s;
+}
+
+.upload-btn:hover {
+
+    border-color: #667eea;
+
+    background: #263548;
 }

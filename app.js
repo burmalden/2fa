@@ -62,12 +62,12 @@ async function checkMasterPassword() {
 
 // Показать окно настройки мастер-пароля
 function showPasswordSetupModal() {
-    document.getElementById('password-modal').style.display = 'block';
+    document.getElementById('password-modal').style.display = 'flex';
 }
 
 // Показать окно входа
 function showLoginModal() {
-    document.getElementById('login-modal').style.display = 'block';
+    document.getElementById('login-modal').style.display = 'flex';
 }
 
 // Настройка мастер-пароля
@@ -276,7 +276,6 @@ function renderAccounts() {
                     <div class="account-info">
                         <div class="account-name">${escapeHtml(account.issuer)}</div>
                         <div class="account-code">${generateTOTP(account.secret)}</div>
-                        <div class="account-secret">Секрет: ${maskSecret(account.secret)}</div>
                     </div>
                     <div class="account-timer" id="timer-${index}">
                         <div class="timer-progress">
@@ -379,7 +378,7 @@ function startTimer() {
 
 // Модальное окно
 function showAddAccountModal() {
-    document.getElementById('add-account-modal').style.display = 'block';
+    document.getElementById('add-account-modal').style.display = 'flex';
 }
 
 function hideAddAccountModal() {
@@ -431,7 +430,7 @@ function isValidSecret(secret) {
 
 // Удаление аккаунта
 async function removeAccount(index) {
-    if (confirm('Удалить этот аккаунт?')) {
+    if (confirm('Удалить этот ключ?')) {
         accounts.splice(index, 1);
         await saveAccounts();
         renderAccounts();
@@ -745,14 +744,14 @@ function switchToRegister() {
 
     document.getElementById('login-modal').style.display = 'none';
 
-    document.getElementById('password-modal').style.display = 'block';
+    document.getElementById('password-modal').style.display = 'flex';
 }
 
 function switchToLogin() {
 
     document.getElementById('password-modal').style.display = 'none';
 
-    document.getElementById('login-modal').style.display = 'block';
+    document.getElementById('login-modal').style.display = 'flex';
 }
 
 function logout() {
@@ -763,7 +762,7 @@ function logout() {
     renderAccounts();
     document.getElementById('login-password').value = '';
     document.getElementById('login-username').value = '';
-    document.getElementById('login-modal').style.display = 'block';
+    document.getElementById('login-modal').style.display = 'flex';
     localStorage.removeItem('2fa-session');
     console.log('🔒 Пользователь вышел из аккаунта');
 }
