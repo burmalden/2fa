@@ -4,6 +4,8 @@ let masterPassword = null;
 let cryptoKey = null;
 let currentUser = null;
 const SESSION_DURATION = 15 * 60 * 1000;
+let cameraStream = null;
+let cameraScanInterval = null;
 
 function getUserStorageKey(username) {
     return `2fa-user-${username}`;
@@ -670,13 +672,13 @@ async function startCameraScanner() {
 
         const video = document.getElementById('qr-video');
 
-        const stream = await navigator.mediaDevices.getUserMedia({
+        cameraStream = await navigator.mediaDevices.getUserMedia({
             video: {
                 facingMode: 'environment'
             }
         });
 
-        video.srcObject = stream;
+        video.srcObject = cameraStream;
 
         scanQRCodeFromVideo(video);
 
@@ -695,7 +697,11 @@ function scanQRCodeFromVideo(video) {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    const scanInterval = setInterval(() => {
+    cameraScanInterval = setInterval(() => {
+
+        if (!video.srcObject) {
+            return;
+        }
 
         if (video.readyState !== video.HAVE_ENOUGH_DATA) {
             return;
@@ -725,16 +731,7 @@ function scanQRCodeFromVideo(video) {
 
             parseOTPAuthURL(code.data);
 
-            clearInterval(scanInterval);
-
-            // Останавливаем камеру
-            const stream = video.srcObject;
-
-            stream.getTracks().forEach(track => track.stop());
-
-            video.srcObject = null;
-
-            alert('QR-код успешно отсканирован!');
+            stopCameraScanner();
         }
 
     }, 300);
@@ -771,3 +768,29 @@ function getUserCheckKey(username) {
     return `2fa-check-${username}`;
 }
 
+function stopCameraScanner() {
+
+    if (cameraScanInterval) {
+
+        clearInterval(cameraScanInterval);
+
+        cameraScanInterval = null;
+    }
+
+    if (cameraStream) {
+
+        cameraStream.getTracks().forEach(track => {
+            track.stop();
+        });
+
+        cameraStream = null;
+    }
+
+    const video = document.getElementById('qr-video');
+
+    if (video) {
+        video.srcObject = null;
+    }
+
+    console.log('📷 Камера остановлена');
+}
